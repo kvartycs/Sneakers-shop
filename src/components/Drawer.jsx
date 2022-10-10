@@ -1,15 +1,16 @@
 import React from 'react'
 
-const Drawer = () => {
+const Drawer = (props) => {
   return (
-    <div style={{ display: 'none' }} className="overlay">
+    <div className="overlay">
       <div className="drawer">
         <h2 className="mb-30 d-flex justify-between ">
           Корзина
           <img
+            onClick={props.onClickClose}
             className="removeBtn cu-p "
             src="/img/btn-remove.svg"
-            alt="remove"
+            alt="close"
           />
         </h2>
 

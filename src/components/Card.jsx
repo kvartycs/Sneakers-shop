@@ -1,26 +1,32 @@
 import React from 'react'
+import { useState } from 'react'
 
-const Card = () => {
+const Card = (props) => {
+  const [isAdded, setIsAdded] = useState(false)
+
+  const onClickPlus = () => {
+    setIsAdded(!isAdded)
+  }
+
   return (
     <div className="card">
-      <div className="favorite">
+      <div className="favorite" onClick={props.onClickFavorite}>
         <img src="/img/unliked.svg" alt="unliked" />
       </div>
-      <img
-        width={133}
-        height={112}
-        src="/img/sneakers/nike blazer.svg"
-        alt="sneakers"
-      />
-      <p>Мужские Кроссовки Nike Blazer Mid Suede</p>
+      <img width={133} height={112} src={props.imageUrl} alt="sneakers" />
+      <p>{props.title}</p>
       <div className="d-flex justify-between align-center">
         <div className="d-flex flex-column">
           <span>Цена:</span>
-          <b>12 999 руб.</b>
+          <b>{props.price} руб.</b>
         </div>
-        <button className="plus">
-          <img width={11} height={11} src="img/plus.svg" alt="plus" />
-        </button>
+
+        <img
+          className="plus"
+          src={isAdded ? 'img/btn-checked.svg' : 'img/btn-plus.svg'}
+          alt="plus"
+          onClick={onClickPlus}
+        />
       </div>
     </div>
   )
