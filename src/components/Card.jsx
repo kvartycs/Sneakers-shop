@@ -1,15 +1,24 @@
 import React from 'react'
 import { useState } from 'react'
 
-const Card = ({ title, imageUrl, price, onFavorite, onPlus }) => {
+const Card = ({
+  id,
+  title,
+  imageUrl,
+  price,
+  onFavorite,
+  onPlus,
+  favorited = false,
+}) => {
   const [isAdded, setIsAdded] = useState(false)
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(favorited)
 
   const onClickPlus = () => {
-    onPlus({ title, imageUrl, price })
+    onPlus({ title, imageUrl, price, id })
     setIsAdded(!isAdded)
   }
   const onClickFavorite = () => {
+    onFavorite({ title, imageUrl, price, id })
     setIsFavorite(!isFavorite)
   }
 
