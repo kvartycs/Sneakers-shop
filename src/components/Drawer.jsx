@@ -1,6 +1,32 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
+import AppContext from '../context'
+import Info from './Info'
+import ContentLoader from 'react-content-loader'
 
 const Drawer = ({ onClickClose, onRemove, items = [] }) => {
+  const { cartItems, setCartItems } = useContext(AppContext)
+  const [orderId, setOrderId] = useState(0)
+  const [isOrderCompleted, setIsOrderCompleted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const onClickOrder = async () => {
+    try {
+      setIsLoading(true)
+      const { data } = await axios.post(
+        'https://634391fa2dadea1175a98d5a.mockapi.io/orders',
+        { items: cartItems }
+      )
+      setOrderId(data.id)
+      setIsOrderCompleted(true)
+      setCartItems([])
+      axios.put('https://634391fa2dadea1175a98d5a.mockapi.io/cart', [])
+    } catch (error) {
+      alert('Не удалось создать заказ')
+    }
+    setIsLoading(false)
+  }
+
   return (
     <div className="overlay">
       <div className="drawer">
@@ -15,29 +41,28 @@ const Drawer = ({ onClickClose, onRemove, items = [] }) => {
         </h2>
 
         {items.length === 0 ? (
-          <div className="cartEmpty d-flex align-center justify-center flex-column flex">
-            <img
-              className="mb-20"
-              width={120}
-              height={120}
-              src="/img/empty cart.svg"
-              alt="empty"
-            />
-            <h2>Корзина пустая</h2>
-            <p className="opacity-6">
-              Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ
-            </p>
-            <button onClick={onClickClose} className="greenButton">
-              <img src="/img/arrow.svg" alt="arrow" />
-              Вернуться назад
-            </button>
-          </div>
+          <Info
+            title={isOrderCompleted ? 'Заказ оформлен!' : 'Корзина пустая'}
+            description={
+              isOrderCompleted
+                ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
+                : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ'
+            }
+            image={
+              isOrderCompleted
+                ? '/img/order completed.svg'
+                : 'img/empty cart.svg'
+            }
+          ></Info>
         ) : (
-          <div className="">
+          <div className="d-flex flex-column flex">
             <div className="items ">
               {items.map((obj) => {
                 return (
-                  <div className="cartItem d-flex align-center mb-20">
+                  <div
+                    key={obj.id}
+                    className="cartItem d-flex align-center mb-20"
+                  >
                     <div
                       style={{
                         backgroundImage: `url('${obj.imageUrl}')`,
@@ -71,7 +96,11 @@ const Drawer = ({ onClickClose, onRemove, items = [] }) => {
                   <b>1074 руб.</b>
                 </li>
               </ul>
-              <button className="greenButton">
+              <button
+                onClick={onClickOrder}
+                disabled={isLoading}
+                className="greenButton"
+              >
                 Оформить заказ <img src="/img/arrow.svg" alt="arrow" />
               </button>
             </div>

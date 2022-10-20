@@ -141,7 +141,7 @@ header {
   padding: 30px;
 
   .items {
-    overflow: auto;
+    overflow-x: auto;
     margin-bottom: 40px;
   }
 
@@ -171,6 +171,18 @@ header {
 
 .greenButton {
   position: relative;
+  &:disabled {
+    background: #9dd558;
+    box-shadow: 0 -200px 100px -120px #9dd558 inset;
+    animation: background 2s infinite alternate;
+    @keyframes background {
+      100% {
+        background: #1ebcf1;
+        box-shadow: 0 -200px 100px -100px #3fe4c3 inset;
+      }
+    }
+    cursor: default;
+  }
 
   &:hover {
     img {

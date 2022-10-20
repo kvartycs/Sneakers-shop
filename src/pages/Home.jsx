@@ -2,13 +2,35 @@ import React from 'react'
 import Card from '../components/Card'
 
 const Home = ({
+  cartItems,
   items,
   searchValue,
   onAddToCart,
   onChangeSearchInput,
   setSearchValue,
   onAddToFavorite,
+  isLoading,
 }) => {
+  const renderItems = () => {
+    const filteredItems = items.filter((item) =>
+      item.title.toLowerCase().includes(searchValue.toLowerCase())
+    )
+    return (isLoading ? [...Array(8)] : filteredItems).map((item, index) => {
+      return (
+        <Card
+          key={index}
+          onFavorite={(obj) => {
+            return onAddToFavorite(obj)
+          }}
+          onPlus={(obj) => {
+            return onAddToCart(obj)
+          }}
+          loading={isLoading}
+          {...item}
+        ></Card>
+      )
+    })
+  }
   return (
     <div className="content p-40">
       <div className="d-flex justify-between mb-40 align-center">
@@ -37,28 +59,8 @@ const Home = ({
           />
         </div>
       </div>
-      <div className=" sneakers d-flex flex-wrap">
-        {items
-          .filter((item) =>
-            item.title.toLowerCase().includes(searchValue.toLowerCase())
-          )
-          .map((item, index) => {
-            return (
-              <Card
-                key={index}
-                title={item.title}
-                price={item.price}
-                imageUrl={item.imageUrl}
-                onFavorite={(obj) => {
-                  return onAddToFavorite(obj)
-                }}
-                onPlus={(obj) => {
-                  return onAddToCart(obj)
-                }}
-              ></Card>
-            )
-          })}
-      </div>
+      {console.log(cartItems, items)}
+      <div className=" sneakers d-flex flex-wrap">{renderItems()}</div>
     </div>
   )
 }
