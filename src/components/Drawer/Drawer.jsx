@@ -1,11 +1,15 @@
 import axios from 'axios'
-import React, { useContext, useState } from 'react'
-import AppContext from '../context'
-import Info from './Info'
-import ContentLoader from 'react-content-loader'
+import React, { useState } from 'react'
 
-const Drawer = ({ onClickClose, onRemove, items = [] }) => {
-  const { cartItems, setCartItems } = useContext(AppContext)
+import Info from '../Info'
+import { useCart } from '../../hooks/useCart'
+
+import styles from './Drawer.module.scss'
+
+const delay = () => new Promise((res) => setTimeout(res, 1000))
+
+const Drawer = ({ onClickClose, onRemove, items = [], opened }) => {
+  const { cartItems, setCartItems, total } = useCart()
   const [orderId, setOrderId] = useState(0)
   const [isOrderCompleted, setIsOrderCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -20,7 +24,14 @@ const Drawer = ({ onClickClose, onRemove, items = [] }) => {
       setOrderId(data.id)
       setIsOrderCompleted(true)
       setCartItems([])
-      axios.put('https://634391fa2dadea1175a98d5a.mockapi.io/cart', [])
+
+      for (let i = 0; i < cartItems.length; i++) {
+        const item = cartItems[i]
+        await axios.delete(
+          'https://634391fa2dadea1175a98d5a.mockapi.io/cart/' + item.id
+        )
+        await delay()
+      }
     } catch (error) {
       alert('Не удалось создать заказ')
     }
@@ -28,8 +39,8 @@ const Drawer = ({ onClickClose, onRemove, items = [] }) => {
   }
 
   return (
-    <div className="overlay">
-      <div className="drawer">
+    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ''}`}>
+      <div className={styles.drawer}>
         <h2 className="mb-30 d-flex justify-between ">
           Корзина
           <img
@@ -56,7 +67,7 @@ const Drawer = ({ onClickClose, onRemove, items = [] }) => {
           ></Info>
         ) : (
           <div className="d-flex flex-column flex">
-            <div className="items ">
+            <div className={`${styles.items}`}>
               {items.map((obj) => {
                 return (
                   <div
@@ -88,12 +99,12 @@ const Drawer = ({ onClickClose, onRemove, items = [] }) => {
                 <li>
                   <span>Итого:</span>
                   <div></div>
-                  <b>21 498 руб.</b>
+                  <b>{total} руб.</b>
                 </li>
                 <li>
                   <span>Налог 5%:</span>
                   <div></div>
-                  <b>1074 руб.</b>
+                  <b>{(total / 100) * 5} руб.</b>
                 </li>
               </ul>
               <button
