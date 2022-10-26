@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import { ceil } from 'mathjs'
 
 import Info from '../Info'
 import { useCart } from '../../hooks/useCart'
@@ -66,7 +67,7 @@ const Drawer = ({ onClickClose, onRemove, items = [], opened }) => {
             }
           ></Info>
         ) : (
-          <div className="d-flex flex-column flex">
+          <div className={`${styles.itemsBlock}`}>
             <div className={`${styles.items}`}>
               {items.map((obj) => {
                 return (
@@ -104,7 +105,7 @@ const Drawer = ({ onClickClose, onRemove, items = [], opened }) => {
                 <li>
                   <span>Налог 5%:</span>
                   <div></div>
-                  <b>{(total / 100) * 5} руб.</b>
+                  <b>{ceil((total / 100) * 5)} руб.</b>
                 </li>
               </ul>
               <button
