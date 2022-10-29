@@ -40,12 +40,12 @@ const Home = ({
             : 'Все кроссовки'}
         </h1>
         <div className="search-block">
-          <img src="/img/search.svg" alt="search" />
+          <img src="img/search.svg" alt="search" />
           {searchValue && (
             <img
               onClick={() => setSearchValue('')}
               className="removeBtn cu-p "
-              src="/img/btn-remove.svg"
+              src="img/btn-remove.svg"
               alt="close"
             />
           )}
@@ -59,7 +59,7 @@ const Home = ({
           />
         </div>
       </div>
-      {console.log(cartItems, items)}
+
       <div className=" sneakers d-flex flex-wrap">{renderItems()}</div>
     </div>
   )

@@ -48,7 +48,7 @@ const Card = ({
           {onFavorite && (
             <div className="favorite" onClick={onClickFavorite}>
               <img
-                src={isFavorite ? 'img/liked.svg' : '/img/unliked.svg'}
+                src={isFavorite ? 'img/liked.svg' : 'img/unliked.svg'}
                 alt="like"
               />
             </div>
